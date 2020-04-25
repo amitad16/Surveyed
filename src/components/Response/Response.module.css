@@ -1,0 +1,47 @@
+.Response {
+  display: flex;
+  justify-content: center;
+}
+
+.Response_showcase {
+  display: flex;
+  justify-content: center;
+}
+
+.Response__showcase_horizontal {
+  flex-direction: row;
+}
+
+.Response__showcase_vertical {
+  flex-direction: column;
+}
+
+.SelectableResponse {
+  background-color: #fff;
+  margin: 1em;
+  padding: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.SelectableResponse:hover {
+  background-color: #fffafa;
+}
+
+.SelectableResponse:active {
+  background-color: #efefef;
+}
+
+.SelectableResponse__circle {
+  border-radius: 50%;
+  height: 160px;
+  width: 160px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+/* .SelectableResponse__rect {
+} */
