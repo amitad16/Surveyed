@@ -16,13 +16,14 @@ interface QuesResponse {
 type Props = {
   responses: QuesResponse[];
   response_display_type: "horizontal" | "vertical";
-  response_display_shape?: "circle" | "rectangle";
+  response_display_shape?: "circle" | "card_default";
   response_display_style?: React.CSSProperties;
   response_interaction_format: "input" | "dropdown" | "select" | null;
   type?: string | null;
   placeholder?: string | null;
   submit_btn_text?: string | null;
   selected_response: string | string[];
+  maximum_selections: number;
   handleResponseSelect: (user_response: string) => void;
 };
 
@@ -31,11 +32,12 @@ const Response: React.FC<Props> = ({
   response_interaction_format,
   response_display_type,
   // response_display_style,
-  // response_display_shape,
+  response_display_shape,
   type,
   placeholder,
   submit_btn_text,
   selected_response,
+  maximum_selections,
   handleResponseSelect
 }) => {
   function isSelected(
@@ -81,6 +83,9 @@ const Response: React.FC<Props> = ({
                 key={response.id}
                 response={response}
                 response_display_type={response_display_type}
+                response_display_shape={response_display_shape}
+                maximum_selections={maximum_selections}
+                total_options={(responses && responses.length) || 1}
                 is_selected={isSelected(response.identifier, selected_response)}
                 handleResponseClick={handleResponseSelect}
               />

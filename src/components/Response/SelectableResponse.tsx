@@ -7,13 +7,16 @@ type QuesResponse = {
   identifier: string;
   title: string;
   description: string | null;
+  image_url: string;
 };
 
 type Props = {
   response: QuesResponse;
   response_display_type: "horizontal" | "vertical";
-  response_display_shape?: "circle" | "rectangle";
+  response_display_shape?: "circle" | "card_default";
   response_display_style?: React.CSSProperties;
+  maximum_selections: number;
+  total_options: number;
   is_selected: boolean;
   handleResponseClick: (identifier: string) => void;
 };
@@ -22,6 +25,8 @@ const SelectableResponse: React.FC<Props> = ({
   response,
   response_display_style,
   response_display_shape,
+  // maximum_selections,
+  total_options,
   is_selected,
   handleResponseClick
 }) => {
@@ -30,31 +35,54 @@ const SelectableResponse: React.FC<Props> = ({
   }
 
   function getClassNameFromDisplayShape(
-    response_display_shape: "circle" | "rectangle" = "circle"
+    response_display_shape: "circle" | "card_default" = "circle",
+    total_options: number
   ): string {
     let shapeCircle = styles.SelectableResponse__circle;
-    let shapeRect = styles.SelectableResponse__rect;
+    let shapeCardDefault = styles.SelectableResponse__card_default;
 
-    switch (response_display_shape) {
-      case "circle":
-        return shapeCircle;
-      case "rectangle":
-        return shapeRect;
-      default:
-        return shapeCircle;
-    }
+    console.log(response_display_shape);
+
+    if (total_options <= 2) return shapeCircle;
+    return shapeCardDefault;
+
+    // switch (response_display_shape) {
+    //   case "circle":
+    //     return shapeCircle;
+    //   case "card_default":
+    //     return shapeCardDefault;
+    //   default:
+    //     return shapeCircle;
+    // }
   }
 
   return (
     <div
       className={`${styles.SelectableResponse} ${getClassNameFromDisplayShape(
-        response_display_shape
-      )} ${is_selected ? "selected" : ""}`}
+        response_display_shape,
+        total_options
+      )} ${
+        is_selected
+          ? styles.SelectableResponse_selected
+          : styles.SelectableResponse_not_selected
+      }`}
       style={response_display_style}
       onClick={handleClick}
     >
-      <h4>{response.title}</h4>
-      <small>{response.description}</small>
+      {!!response.image_url && (
+        <div className={styles.SelectableResponse__image_wrapper}>
+          <img src={response.image_url} alt="" />
+        </div>
+      )}
+
+      <div className={styles.SelectableResponse__text_wrapper}>
+        <h4 className={styles.SelectableResponse__title}>{response.title}</h4>
+        {!!response.description && (
+          <small className={styles.SelectableResponse__desc}>
+            {response.description}
+          </small>
+        )}
+      </div>
     </div>
   );
 };

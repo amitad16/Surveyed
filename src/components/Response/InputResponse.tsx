@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 
+import styles from "./Response.module.css";
+
+// import Button from "../common/Button";
+
 type Props = {
   inputType: string | undefined;
   inputPlaceholder: string | undefined;
@@ -20,25 +24,33 @@ const InputResponse: React.FC<Props> = ({
     setResponse(value);
   }
 
-  function handleSubmit(): void {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
     handleSubmitClick(response);
   }
 
   return (
-    <form className="InputResponse" onSubmit={handleSubmit}>
-      <input
-        className="InputResponse__input"
-        value={response}
-        type={inputType}
-        placeholder={inputPlaceholder}
-        onChange={onValueChange}
-      />
+    <form className={styles.InputResponse} onSubmit={handleSubmit}>
+      <div className={styles.InputBox}>
+        <input
+          className={styles.InputResponse__input}
+          value={response}
+          type={inputType}
+          placeholder={inputPlaceholder}
+          onChange={onValueChange}
+        />
 
-      {!submitBtnText ? (
-        <button type="submit">-></button>
-      ) : (
-        <button type="submit">{submitBtnText}</button>
-      )}
+        <button
+          className={`${styles.InputResponse__submit_btn} ${
+            !!submitBtnText
+              ? styles.InputResponse__submit_btn_with_text
+              : styles.InputResponse__submit_btn_default
+          }`}
+          type="submit"
+        >
+          {submitBtnText || "->"}
+        </button>
+      </div>
     </form>
   );
 };

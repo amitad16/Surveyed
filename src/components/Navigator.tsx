@@ -1,6 +1,9 @@
 import React from "react";
 
+import styles from "./Navigator.module.css";
+
 type Props = {
+  isFirstStep: boolean;
   continueBtnText: string | null;
   maximumSelections: number;
   handleNextClicked: () => void;
@@ -8,18 +11,30 @@ type Props = {
 };
 
 const Navigator: React.FC<Props> = ({
+  isFirstStep,
   continueBtnText,
   maximumSelections,
   handleBackClicked,
   handleNextClicked
 }) => {
   return (
-    <div className="Navigator">
-      <button type="button" onClick={handleBackClicked}>
-        Previous
-      </button>
+    <div className={styles.Navigator}>
+      {!isFirstStep && (
+        <button
+          className={styles.Navigator__prev_btn}
+          type="button"
+          onClick={handleBackClicked}
+        >
+          Back
+        </button>
+      )}
+
       {maximumSelections > 1 && (
-        <button type="button" onClick={handleNextClicked}>
+        <button
+          className={styles.Navigator__next_btn}
+          type="button"
+          onClick={handleNextClicked}
+        >
           {continueBtnText || "Continue"}
         </button>
       )}

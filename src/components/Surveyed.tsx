@@ -15,7 +15,7 @@ type SurveyStep = {
     description: string | null;
     identifier: string;
     response_display_type: "horizontal" | "vertical";
-    response_display_shape?: "circle" | "rectangle";
+    response_display_shape?: "circle" | "card_default";
     response_display_style?: React.CSSProperties;
     response_interaction_format: "input" | "dropdown" | "select" | null;
     type?: string | null;
@@ -68,6 +68,7 @@ type State = {
     | "completed";
   completedSteps?: SurveyStep[];
   step: SurveyStep;
+  isFirstStep: boolean;
   isLastStep?: boolean;
 };
 
@@ -100,7 +101,8 @@ class Surveyed extends PureComponent<Props, State> {
         percent_complete: 0,
         total_steps: 0,
         current_step: 0
-      }
+      },
+      isFirstStep: true
     };
 
     this.delay = this.delay;
@@ -113,7 +115,7 @@ class Surveyed extends PureComponent<Props, State> {
     this.handleNextClicked = this.handleNextClicked.bind(this);
   }
 
-  delay: NodeJS.Timeout;
+  delay: number;
 
   componentDidMount() {
     this.initializeSurvey();
@@ -128,11 +130,15 @@ class Surveyed extends PureComponent<Props, State> {
         prevProps.step.attributes.identifier
       ) {
         if (this.props.step.is_last_step) {
-          this.setState({ isLastStep: this.props.step.is_last_step });
+          this.setState({
+            isLastStep: this.props.step.is_last_step,
+            isFirstStep: false
+          });
         } else
           this.setState(
             {
-              step: this.props.step
+              step: this.props.step,
+              isFirstStep: false
             },
             () => {
               if (this.state.step.attributes.continue_after_delay) {
@@ -189,8 +195,6 @@ class Surveyed extends PureComponent<Props, State> {
     let { attributes } = this.state.step;
 
     if (attributes.maximum_selections === 1) {
-      console.log("one maximum selection = ", attributes.maximum_selections);
-
       this.setState(prevState => {
         let newState = {
           step: {
@@ -214,7 +218,6 @@ class Surveyed extends PureComponent<Props, State> {
         return newState;
       }, this.sendResponseAndContinue);
     } else {
-      console.log("more maximum selection = ", attributes.maximum_selections);
       this.setState(prevState => {
         let newState = {
           step: {
@@ -240,10 +243,6 @@ class Surveyed extends PureComponent<Props, State> {
           }
         } else newResponse = [user_response];
 
-        // console.log("prevReponse::", prevResponse);
-        // console.log("userReponse::", user_response);
-        // console.log("newReponse::", newResponse);
-
         if (newResponse.length === 0)
           delete newState.step.profile_responses[attributes.identifier];
         else
@@ -255,11 +254,13 @@ class Surveyed extends PureComponent<Props, State> {
   }
 
   sendResponseAndContinue(): void {
-    console.log("this.state:::", this.state);
-
     let { attributes, profile_responses } = this.state.step;
 
-    // if (!profile_responses[attributes.identifier]) return;
+    if (
+      !profile_responses[attributes.identifier] &&
+      !attributes.continue_after_delay
+    )
+      return;
 
     let response = {
       surveyId: this.state.surveyId,
@@ -268,9 +269,7 @@ class Surveyed extends PureComponent<Props, State> {
       user_response: profile_responses[attributes.identifier] || ""
     };
 
-    console.log("response:::", response);
-
-    this.props.onNext(response);
+    setTimeout(() => this.props.onNext(response), 1200);
   }
 
   handleBackClicked() {
@@ -331,6 +330,7 @@ class Surveyed extends PureComponent<Props, State> {
               placeholder={placeholder}
               submit_btn_text={submit_btn_text}
               selected_response={step.profile_responses[identifier]}
+              maximum_selections={maximum_selections}
               handleResponseSelect={this.handleResponseClick}
             />
 
@@ -358,6 +358,7 @@ class Surveyed extends PureComponent<Props, State> {
           </div>
 
           <Navigator
+            isFirstStep={this.state.isFirstStep}
             continueBtnText={continue_btn_text || null}
             maximumSelections={maximum_selections}
             handleBackClicked={this.handleBackClicked}
