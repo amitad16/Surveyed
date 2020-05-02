@@ -2,8 +2,6 @@ import React, { useState } from "react";
 
 import styles from "./Response.module.css";
 
-// import Button from "../common/Button";
-
 type Props = {
   inputType: string | undefined;
   inputPlaceholder: string | undefined;

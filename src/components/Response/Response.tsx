@@ -5,13 +5,8 @@ import styles from "./Response.module.css";
 import SelectableResponse from "./SelectableResponse";
 import InputResponse from "./InputResponse";
 
-interface QuesResponse {
-  id: string;
-  title: string;
-  description: string;
-  identifier: string;
-  image_url?: string | undefined;
-}
+// Types
+import { QuesResponse } from "../types";
 
 type Props = {
   responses: QuesResponse[];
@@ -31,7 +26,6 @@ const Response: React.FC<Props> = ({
   responses,
   response_interaction_format,
   response_display_type,
-  // response_display_style,
   response_display_shape,
   type,
   placeholder,

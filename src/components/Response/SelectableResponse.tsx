@@ -2,13 +2,8 @@ import React from "react";
 
 import styles from "./Response.module.css";
 
-type QuesResponse = {
-  id: string;
-  identifier: string;
-  title: string;
-  description: string | null;
-  image_url: string;
-};
+// Types
+import { QuesResponse } from "../types";
 
 type Props = {
   response: QuesResponse;
@@ -25,7 +20,6 @@ const SelectableResponse: React.FC<Props> = ({
   response,
   response_display_style,
   response_display_shape,
-  // maximum_selections,
   total_options,
   is_selected,
   handleResponseClick

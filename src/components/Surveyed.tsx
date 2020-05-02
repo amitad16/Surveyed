@@ -8,37 +8,8 @@ import Question from "./Question";
 import Response from "./Response";
 import Navigator from "./Navigator";
 
-type SurveyStep = {
-  attributes: {
-    id: string;
-    title: string;
-    description: string | null;
-    identifier: string;
-    response_display_type: "horizontal" | "vertical";
-    response_display_shape?: "circle" | "card_default";
-    response_display_style?: React.CSSProperties;
-    response_interaction_format: "input" | "dropdown" | "select" | null;
-    type?: string | null;
-    placeholder?: string | null;
-    submit_btn_text?: string | null;
-    continue_btn_text?: string | null;
-    maximum_selections: number;
-    continue_after_delay?: number | null;
-    responses: {
-      id: string;
-      title: string;
-      description: string;
-      identifier: string;
-      image_url?: string;
-    }[];
-    redirect_url?: string;
-  };
-  profile_responses: object;
-  percent_complete: number;
-  total_steps: number;
-  current_step: number;
-  is_last_step?: boolean | undefined;
-};
+// Types
+import { SurveyStep } from "./types";
 
 type Props = {
   surveyId?: string;
@@ -116,6 +87,7 @@ class Surveyed extends PureComponent<Props, State> {
   }
 
   delay: number;
+  // delay: ReturnType<typeof setTimeout>;
 
   componentDidMount() {
     this.initializeSurvey();
@@ -142,7 +114,7 @@ class Surveyed extends PureComponent<Props, State> {
             },
             () => {
               if (this.state.step.attributes.continue_after_delay) {
-                this.delay = setTimeout(
+                this.delay = window.setTimeout(
                   this.sendResponseAndContinue.bind(this),
                   this.state.step.attributes.continue_after_delay
                 );
@@ -294,7 +266,6 @@ class Surveyed extends PureComponent<Props, State> {
     else if (surveyStatus === "completed") return "Survey completed";
     else if ((surveyStatus === "ready" || surveyStatus === "running") && step) {
       const {
-        // id,
         identifier,
         title,
         description,
@@ -307,12 +278,7 @@ class Surveyed extends PureComponent<Props, State> {
         placeholder,
         submit_btn_text,
         maximum_selections,
-        // continue_after_delay,
         continue_btn_text
-        // placeholder,
-        // type,
-        // response_display_style,
-        // submit_btn_text
       } = step.attributes;
 
       return (
@@ -333,28 +299,6 @@ class Surveyed extends PureComponent<Props, State> {
               maximum_selections={maximum_selections}
               handleResponseSelect={this.handleResponseClick}
             />
-
-            {/* {response_interaction_format === "select" &&
-              responses &&
-              responses.map(response => (
-                <Response
-                  key={response.id}
-                  response={response}
-                  selected_response={step.profile_responses[identifier]}
-                  response_display_type={response_display_type}
-                  response_interaction_format={response_interaction_format}
-                  handleResponseClick={this.handleResponseClick}
-                />
-              ))}
-
-            {response_interaction_format === "input" && (
-              <InputResponse
-                inputType={type || ""}
-                inputPlaceholder={placeholder || ""}
-                submitBtnText={submit_btn_text || ""}
-                handleSubmitClick={this.handleResponseClick}
-              />
-            )} */}
           </div>
 
           <Navigator

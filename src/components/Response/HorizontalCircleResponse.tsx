@@ -1,14 +1,11 @@
 import React from "react";
 
-type QuesResponse = {
-  id: string;
-  identifier: string;
-  title: string;
-  description: string | null;
+// Types
+import { QuesResponse } from "../types";
+
+type Props = QuesResponse & {
   handleResponseClick: (identifier: string) => void;
 };
-
-type Props = QuesResponse;
 
 const HorizontalCircleResponse: React.FC<Props> = ({
   // id,
