@@ -6,7 +6,7 @@ import {
   initializeSurvey,
   postQuestionResponse,
   getPreviousStep
-} from "./survey-data";
+} from "./data-sets/survey2/survey2-questions";
 
 class App extends PureComponent {
   constructor() {
